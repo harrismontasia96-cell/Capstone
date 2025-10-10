@@ -6,6 +6,7 @@ import java.util.*;//Imports all utility classes like list and arraylist
 public class TransactionManager {//Defines a public class
 
     private static final String FILE_NAME = "transactions.csv";//Declares a constant variable that stores the filename of my transaction file.
+
     public static void saveTransaction(Transaction transaction) {//a static method that takes a Transaction object and writes it to the CSV file.
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {//try-with-resources statement
             writer.write(transaction.toCSV());//Calls  the CSV method from my Transaction class
