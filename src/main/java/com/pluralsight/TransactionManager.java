@@ -5,7 +5,30 @@ import java.util.*;//Imports all utility classes like list and arraylist
 
 public class TransactionManager {//Defines a public class
 
+    public static void main(String[] args) {
+
+    }
+
     private static final String FILE_NAME = "transactions.csv";//Declares a constant variable that stores the filename of my transaction file.
+    public static void initializeCSV() {
+        File file = new File(FILE_NAME);
+
+
+        if (!file.exists()) { // If transactions.csv doesn’t exist yet
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                // Optionally, write a few sample lines to start
+                writer.write("2023-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50");
+                writer.newLine();
+                writer.write("2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00");
+                writer.newLine();
+                System.out.println(" transactions.csv created successfully with sample data!");
+            } catch (IOException e) {
+                System.out.println(" Error creating transactions.csv: " + e.getMessage());
+            }
+        } else {
+            System.out.println("transactions.csv already exists.");
+        }
+    }
 
     public static void saveTransaction(Transaction transaction) {//a static method that takes a Transaction object and writes it to the CSV file.
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {//try-with-resources statement

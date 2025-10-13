@@ -1,7 +1,8 @@
-package com.pluralsight;
+package com.pluralsight;//puts this class in the com.pluralsight package the JVM and compiler use the package name to locate and load the class
 
 public class Transaction { // DECLARING MY PUBLIC CLASS ( public class meaning can be accessed from anywhere in my project.
     public static void main(String[] args) {
+
 
     }// private Means these variables cannot be accessed directly from outside the class
     private String date;//The date of the transaction
@@ -14,10 +15,30 @@ public class Transaction { // DECLARING MY PUBLIC CLASS ( public class meaning c
     // These constructors run and assign the provided arguments to the instance variables.
     public Transaction(String date, String time, String description, String vendor, double amount) {
         this.date = date; //current object
-        this.time = time;
+        this.time = time;//assigns the parameter value to the instance field; this refers to the current object.
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;
+    }
+//provide read access to private fields from other classes
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
     public String toCSV() { // a method i chose to convert the transaction’s data into a CSV (Comma-Separated Values) format

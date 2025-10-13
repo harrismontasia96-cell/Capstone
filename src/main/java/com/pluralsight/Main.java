@@ -7,7 +7,11 @@ import java.time.format.DateTimeFormatter;//Imports the class thus allows me to 
 
 public class Main {//Declares your main class, named Main.
     public static void main(String[] args) {//Defines the main method that will be called when my Java program starts.
-        Scanner scanner = new Scanner(System.in);//Creates a new Scanner object for keyboard input
+        TransactionManager.initializeCSV();
+        Scanner scanner = new Scanner(System.in);  //Creates a new Scanner object for keyboard input
+        showLedger(scanner);
+
+
         boolean running = true;//a boolean flag that controls the main loop so When running becomes false, the program exits the loop and stops
 
         System.out.println("========================================");
@@ -28,7 +32,7 @@ public class Main {//Declares your main class, named Main.
                     makePayment(scanner); // Record a payment
                     break;
                 case "L":
-                    showLedger(); // View all transactions
+                    showLedger(scanner);  // View all transactions
                     break;
                 case "X":
                     running = false; // Ends the loop and exits
@@ -134,7 +138,7 @@ public class Main {//Declares your main class, named Main.
                     displayTransactions(filterPayments(transactions), "Payments Only");//keeps only transactions with negative amounts (expenses).
                     break;
                 case "R":
-                    showreports(scanner, transactions);//Takes the user to the Reports Menu
+                    showReports(scanner, transactions);//Takes the user to the Reports Menu
                     break;
                 case "0"://Ends the ledger loop and goes back to the previous menu.
                     viewingLedger = false;
@@ -143,6 +147,57 @@ public class Main {//Declares your main class, named Main.
                     return;
                 default:
                     System.out.println("Invalid option, please try again.");//Handles invalid input by prompting the user to re-enter a valid choice.
+            }
+        }
+    }
+    private static void showReports(Scanner scanner, List<Transaction> transactions) {
+        boolean viewingReports = true;
+
+        while (viewingReports) {
+            System.out.println("\n=========== REPORTS MENU ===========");
+            System.out.println("1) Month-to-Date");
+            System.out.println("2) Previous Month");
+            System.out.println("3) Year-to-Date");
+            System.out.println("4) Previous Year");
+            System.out.println("5) Search by Vendor");
+            System.out.println("0) Back");
+            System.out.println("====================================");
+            System.out.print("Select a report option: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1":
+                    LocalDate now = LocalDate.now();
+                    List<Transaction> mtd = filterByMonth(transactions, now.getYear(), now.getMonthValue());
+                    displayTransactions(mtd, "Month-to-Date");
+                    break;
+                case "2":
+                    LocalDate prevMonth = LocalDate.now().minusMonths(1);
+                    List<Transaction> pm = filterByMonth(transactions, prevMonth.getYear(), prevMonth.getMonthValue());
+                    displayTransactions(pm, "Previous Month");
+                    break;
+                case "3":
+                    int currentYear = LocalDate.now().getYear();
+                    List<Transaction> ytd = filterByYear(transactions, currentYear);
+                    displayTransactions(ytd, "Year-to-Date");
+                    break;
+                case "4":
+                    int prevYear = LocalDate.now().getYear() - 1;
+                    List<Transaction> py = filterByYear(transactions, prevYear);
+                    displayTransactions(py, "Previous Year");
+                    break;
+                case "5":
+                    System.out.print("Enter vendor name to search: ");
+                    String vendorName = scanner.nextLine().trim();
+                    List<Transaction> vendorResults = filterByVendor(transactions, vendorName);
+                    displayTransactions(vendorResults, "Transactions for Vendor: " + vendorName);
+                    break;
+                case "0":
+                    viewingReports = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
             }
         }
     }
