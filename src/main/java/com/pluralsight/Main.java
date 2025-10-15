@@ -121,6 +121,7 @@ public class Main {//Declares your main class, named Main.
             System.out.println("H) Home");
             System.out.println("===================================");
             System.out.print("Select an option: ");
+
             String choice = scanner.nextLine().trim().toUpperCase();//scanner.nextLine() waits for the user’s input.
 //.trim() removes spaces and .toUpperCase() ensures input like d or D both work
 
@@ -150,57 +151,138 @@ public class Main {//Declares your main class, named Main.
             }
         }
     }
-    private static void showReports(Scanner scanner, List<Transaction> transactions) {
-        boolean viewingReports = true;
+    private static void showReports(Scanner scanner, List<Transaction> transactions) {//displays a Reports menu, accepts the user’s choice, and runs report filters
+        boolean viewingReports = true;// boolean flag controls the while loop
 
-        while (viewingReports) {
+        while (viewingReports) {//a loop that repeatedly prints the menu header and options.
             System.out.println("\n=========== REPORTS MENU ===========");
             System.out.println("1) Month-to-Date");
             System.out.println("2) Previous Month");
             System.out.println("3) Year-to-Date");
             System.out.println("4) Previous Year");
             System.out.println("5) Search by Vendor");
+            System.out.println("6) Custom Search");
             System.out.println("0) Back");
             System.out.println("====================================");
             System.out.print("Select a report option: ");
 
-            String choice = scanner.nextLine().trim();
+            String choice = scanner.nextLine().trim();// this line Reads the user’s input (their menu choice) and trims whitespace
 
-            switch (choice) {
+            switch (choice) {//a switch to branch based on the user’s selection.
                 case "1":
-                    LocalDate now = LocalDate.now();
-                    List<Transaction> mtd = filterByMonth(transactions, now.getYear(), now.getMonthValue());
-                    displayTransactions(mtd, "Month-to-Date");
-                    break;
+                    LocalDate now = LocalDate.now();//gets today’s date (system clock).
+                    List<Transaction> mtd = filterByMonth(transactions, now.getYear(), now.getMonthValue());//returns transactions whose date string
+                    displayTransactions(mtd, "Month-to-Date");//matches the current year and month.
+                    break;//leaves the switch and returns to the top of the reports loop
                 case "2":
-                    LocalDate prevMonth = LocalDate.now().minusMonths(1);
+                    LocalDate prevMonth = LocalDate.now().minusMonths(1);//computes the date exactly one month earlier
                     List<Transaction> pm = filterByMonth(transactions, prevMonth.getYear(), prevMonth.getMonthValue());
                     displayTransactions(pm, "Previous Month");
                     break;
                 case "3":
-                    int currentYear = LocalDate.now().getYear();
+                    int currentYear = LocalDate.now().getYear();//Gets current year and uses filterByYear to include all transactions in that year.
                     List<Transaction> ytd = filterByYear(transactions, currentYear);
                     displayTransactions(ytd, "Year-to-Date");
                     break;
                 case "4":
-                    int prevYear = LocalDate.now().getYear() - 1;
+                    int prevYear = LocalDate.now().getYear() - 1;//Calculates last year (currentYear - 1) and displays those transactions.
                     List<Transaction> py = filterByYear(transactions, prevYear);
                     displayTransactions(py, "Previous Year");
                     break;
                 case "5":
-                    System.out.print("Enter vendor name to search: ");
+                    System.out.print("Enter vendor name to search: ");//Prompts the user for a vendor string, trims it.
                     String vendorName = scanner.nextLine().trim();
                     List<Transaction> vendorResults = filterByVendor(transactions, vendorName);
                     displayTransactions(vendorResults, "Transactions for Vendor: " + vendorName);
                     break;
+                case "6"://Calls runCustomSearch(scanner) (defined below) to handle a more complex interactive filter.
+                    runCustomSearch(scanner);
+                    break;
                 case "0":
-                    viewingReports = false;
+                    viewingReports = false;//Sets the loop flag to false; after break the while condition fails and the method returns to the caller.
                     break;
                 default:
-                    System.out.println("Invalid choice, please try again.");
+                    System.out.println("Invalid choice, please try again.");//Handles invalid input.
+            }// ends switch
+        }// ends while
+    }
+    private static void runCustomSearch(Scanner scanner) {//This method interacts with the user to build a set of filters (start/end date, description substring, vendor substring, exact amount) and then runs those filters against the transactions list, printing matches.
+        System.out.println("\n=========== CUSTOM SEARCH ===========");//Prints header
+        System.out.println("Leave any field blank to skip filtering by it.");
+
+        // Prompt the user for all possible filters
+        System.out.print("Start Date (YYYY-MM-DD): ");
+        String startInput = scanner.nextLine().trim();
+                                                 //date strings in YYYY-MM-DD (ISO) format.
+        System.out.print("End Date (YYYY-MM-DD): ");
+        String endInput = scanner.nextLine().trim();
+
+        System.out.print("Description Contains: ");
+        String descInput = scanner.nextLine().trim().toLowerCase();//text filters; converted to lower case for case-insensitive matching.
+
+        System.out.print("Vendor Contains: ");
+        String vendorInput = scanner.nextLine().trim().toLowerCase();//text filters; converted to lower case for case-insensitive matching.
+
+        System.out.print("Amount (Exact Match): ");
+        String amountInput = scanner.nextLine().trim();
+
+        // Load transactions from the CSV
+        List<Transaction> transactions = TransactionManager.loadTransactions();
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+            return;//If none found, prints message and returns early.
+        }
+
+        // Converts date strings safely and Initializes the filter variables as null (means “no filter”).
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        Double amountFilter = null;
+
+        try {
+            if (!startInput.isEmpty()) startDate = LocalDate.parse(startInput);//Tries to parse each input if it isn’t blank:
+            if (!endInput.isEmpty()) endDate = LocalDate.parse(endInput);//parses an ISO YYYY-MM-DD string into a LocalDate
+            if (!amountInput.isEmpty()) amountFilter = Double.parseDouble(amountInput);//converts the numeric string into a Double.
+        } catch (Exception e) {//If parsing fails
+            System.out.println(" Invalid input format. Please check your dates or amount.");//Prints an error and returns (no search performed)
+            return;
+        }
+
+        // Filter results
+        List<Transaction> results = new ArrayList<>();//Creates an empty results list.
+
+        for (Transaction t : transactions) {//Loops over each transaction
+            LocalDate tDate = LocalDate.parse(t.getDate());//Parses transaction date strings into a LocalDates
+            boolean matches = true;
+
+            //date range filters:
+            if (startDate != null && tDate.isBefore(startDate)) matches = false;// if filter exists and the transaction date is before it
+
+            if (endDate != null && tDate.isAfter(endDate)) matches = false;//filter exists and the transaction date is after it
+
+        //Text filters:
+            if (!descInput.isEmpty() && !t.getDescription().toLowerCase().contains(descInput)) matches = false;
+                                                                                                      //If user provided descInput, the code lowercases the transaction description and checks substring This implements case-insensitive substring search.
+            if (!vendorInput.isEmpty() && !t.getVendor().toLowerCase().contains(vendorInput)) matches = false;
+
+            if (amountFilter != null && t.getAmount() != amountFilter) matches = false;//If the user entered an amount, only transactions with exactly that amount (double equality) pass.
+
+            if (matches) results.add(t);//If the transaction passed all tested filters, it’s added to results.
+        }
+
+        // Display results
+        if (results.isEmpty()) {
+            System.out.println("\nNo transactions matched your search criteria.");//If no matches, informs the user.
+        } else {//If there are matches:
+            Collections.reverse(results); // Reverses the results so newest transactions display first.
+            System.out.println("\n--- Custom Search Results ---");
+            printLedgerHeader();//Prints a header
+            for (Transaction t : results) {
+                printLedgerEntry(t);//Iterates through results and prints each transaction row
             }
         }
     }
+
+
     // FILTER METHODS
     private static List<Transaction> filterDeposits(List<Transaction> transactions) {//Creates a new empty list named deposits
         List<Transaction> deposits = new ArrayList<>();//Loops through every transaction.
@@ -272,7 +354,18 @@ public class Main {//Declares your main class, named Main.
             }
         }
     }
-}
+            private static void printLedgerHeader() {
+                System.out.printf("%-12s %-10s %-30s %-20s %-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                System.out.println("--------------------------------------------------------------------------------------");
+            }
+            // Prints one transaction row in formatted form
+            private static void printLedgerEntry(Transaction t) {
+                System.out.printf("%-12s %-10s %-30s %-20s %-10.2f%n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+
+
 
 
 
