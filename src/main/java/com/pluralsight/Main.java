@@ -1,11 +1,12 @@
 package com.pluralsight;// the Main.java is The core control center that handles all user interactions, menus, and program logic.
 
+//My import statements tell the program which external packages or libraries i want to use in my code.
 import java.util.*;//Reading user input such as (Scanner) and Handling lists of transactions (objects)
 import java.time.*;//Getting the current date and current time
 import java.time.format.DateTimeFormatter;//Imports the class thus allows me to format time or date into a custom pattern
 
 
-public class Main {//Declares your main class, named Main.
+public class Main {//Declares my main class, named Main.
     public static void main(String[] args) {//Defines the main method that will be called when my Java program starts.
         TransactionManager.initializeCSV();
         Scanner scanner = new Scanner(System.in);  //Creates a new Scanner object for keyboard input
@@ -75,8 +76,8 @@ public class Main {//Declares your main class, named Main.
                 amount
         );
 
-        TransactionManager.saveTransaction(transaction);
-        System.out.println("Deposit added successfully!");
+        TransactionManager.saveTransaction(transaction);// saves input to csv file
+        System.out.println("Deposit added successfully!");// outputs successful deposit message
     }
     // Make Payment (Debit) Method
     // Prompts the user for payment details and saves them as a negative to indicate money leaving your account.
