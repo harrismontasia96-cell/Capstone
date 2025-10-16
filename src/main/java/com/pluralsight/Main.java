@@ -1,4 +1,4 @@
-package com.pluralsight;
+package com.pluralsight;// the Main.java is The core control center that handles all user interactions, menus, and program logic.
 
 import java.util.*;//Reading user input such as (Scanner) and Handling lists of transactions (objects)
 import java.time.*;//Getting the current date and current time

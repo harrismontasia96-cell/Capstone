@@ -1,5 +1,5 @@
 package com.pluralsight;//puts this class in the com.pluralsight package the JVM and compiler use the package name to locate and load the class
-
+//Transaction.java is A class that defines what a “Transaction” is (date, time, vendor, description, and amount).
 public class Transaction { // DECLARING MY PUBLIC CLASS ( public class meaning can be accessed from anywhere in my project.
     public static void main(String[] args) {
 

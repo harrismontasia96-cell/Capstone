@@ -1,4 +1,4 @@
-package com.pluralsight;
+package com.pluralsight;// the TransactionManager is A helper class that manages reading and writing those transactions to a CSV file.
 
 import java.io.*;//Imports all the classes in the package (for Input/Output operations)These classes handle reading/writing text files.
 import java.util.*;//Imports all utility classes like list and arraylist
