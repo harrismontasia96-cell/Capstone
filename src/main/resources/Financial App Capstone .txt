@@ -1,23 +1,75 @@
 Capstone 1: Accounting Ledger Application
 
 
-Today I’ll be walking you through my Java project, a Financial Tracker Application that allows users to manage their personal transactions through the console. This project is designed to help users Record deposits and payments Store those transactions in a CSV file for persistence View, filter, and analyze their transactions in different ways through a Ledger and Reports system.
-This project acts as a simple accounting system built entirely with Java fundamentals using concepts like classes, methods, loops, conditionals, lists, file I/O, and date/time handling. My program consists of three main parts
- Main.java — The core control center that handles all user interactions, menus, and program logic.
- Transaction.java — A class that defines what a “Transaction” is (date, time, vendor, description, and amount).
-TransactionManager.java — A helper class that manages reading and writing those transactions to a CSV file.
-Today’s focus will mainly be on the Main.java file, which connects all these parts together. When the program starts It initializes the CSV file Displays a welcome message and main menu. The user can then Add a deposit Make a payment Open the ledger to view transactions or exit the program. The system loops until the user chooses to exit.
-The main.java method is the entry point of the program where everything begins It calls (TransactionManager.initializeCSV) to ensure there’s a file ready to store data. Creates a Scanner object to capture user input. Then calls (showLedger(scanner) once at startup to display existing transactions if any. It then enters a (while) loop that keeps showing the main menu until the user decides to exit.
-Inside that loop the program displays the main menu options (Deposit, Payment, Ledger, Exit. It then waits for the user’s input and normalizes it (trims and capitalizes it). Then decides what action to take using a switch statement.
-The add deposit feature allows users to record income transactions money coming in When the user selects D, this method Prompts for a description (what the money is for). Prompts for a vendor or source. Prompts for the amount. Validates the amount using (getValidAmount) this prevents invalid input. Captures the current date and time using (LocalDate.now) and (LocalTime.now). Creates a new Transaction object containing those details. Saves the transaction to the CSV file using (TransactionManager.saveTransaction)
-(makePayment) creates a Transaction object and stores it via (TransactionManager) The ledger is the user’s main window into their financial data a way to see what’s been recorded. This method offers options like All Entries, Deposits Only, Payments Only Reports, Back Home The system loads all transactions from the CSV file into a List. It then uses filtering methods like (filterDeposits) or (filterPayments) to show specific data views. The list is then displayed in a clean, table-like format using (System.out.printf) giving users a structured and readable view.
-The Reports section allows users to analyze data to see patterns and summaries based on time periods or vendors. This feature supports Month-to-Date, Previous Month, Year-to-Date, Previous Year, Search by Vendor, Custom Search
-The Custom Search goes further letting the user filter by Date range, Description text, Vendor text, Exact amount. the (filterByMonth) and (filterByVendor) are utility methods that make the reporting features possible. Each filter loops through every transaction in the list and checks conditions If a transaction matches the condition, it’s added to a new list.
+Today Iï¿½ll be walking you through my Java project, a Financial Tracker Application that allows users to manage their personal transactions through the console.
+This project is designed to help users Record deposits and payments Store those transactions in a CSV file for persistence View, filter, and analyze their transactions
+in different ways through a Ledger and Reports system.
+This project acts as a simple accounting system built entirely with Java fundamentals using concepts like classes, methods, loops, conditionals, lists, file I/O,
+and date/time handling.
+
+ -My program consists of three main parts
+
+ -Main.java is The core control center that handles all user interactions, menus, and program logic.
+
+ -Transaction.java is A class that defines what a ï¿½Transactionï¿½ is (date, time, vendor, description, and amount).
+
+ -TransactionManager.java is A helper class that manages reading and writing those transactions to a CSV file.
+
+Todayï¿½s focus will mainly be on the Main.java file, which connects all these parts together.
+When the program starts It initializes the CSV file Displays a welcome message and main menu.
+The user can then Add a deposit Make a payment Open the ledger to view transactions or exit the program while The system loops until the user chooses to exit.
+
+The main.java method is the entry point of the program where everything begins It calls
+ -(TransactionManager.initializeCSV) to ensure thereï¿½s a file ready to store data.
+ it then Creates a Scanner object to capture user input.
+ Then calls (showLedger(scanner) once at startup to display existing transactions if any.
+
+ It then enters a (while) loop that keeps showing the main menu until the user decides to exit.
+Inside that loop the program displays the
+main menu options (Deposit, Payment, Ledger, Exit.
+It then waits for the userï¿½s input and normalizes it (trims and capitalizes it). Then decides what action to take using a switch statement.
+
+The add deposit method allows users to record income transactions money coming in When the user selects D,
+this method Prompts for a description (what the money is for).
+ it also Prompts for a vendor or source. and Prompts for the amount
+ it then Validates the amount using (getValidAmount) this prevents invalid input.
+  it then Captures the current date and time using (LocalDate.now) and (LocalTime.now).
+  then Creates a new Transaction object containing those details.
+  and Saves the transaction to the CSV file using (TransactionManager.saveTransaction)
+
+the (makePayment) option creates a Transaction object and stores it via (TransactionManager)
+The ledger is the userï¿½s main window into their financial data a way to see whatï¿½s been recorded. This method offers options
+ like All Entries, Deposits Only, Payments Only Reports, Back and  Home
+ The system loads all transactions from the CSV file into a List.
+ It then uses filtering methods like (filterDeposits) or (filterPayments) to show specific data views.
+ The list is then displayed in a clean, table-like format using (System.out.printf) giving users a structured and readable view.
+
+The Reports option allows users to analyze data to see patterns and summaries based on time periods or vendors.
+This feature supports Month-to-Date, Previous Month, Year-to-Date, Previous Year, Search by Vendor, Custom Search
+
+The Custom Search goes further letting the user filter by Date range, Description text, Vendor text and or Exact amount.
+the (filterByMonth) and (filterByVendor) are utility methods that make the reporting features possible.
+Each filter loops through every transaction in the list and checks conditions If a transaction matches the condition, itï¿½s added to a new list.
 At the end, that filtered list is returned for display.
-(displayTransactions) Formats data that’s easy to read. This method prints a clean, formatted table. It uses the (printf) method for aligned columns. 
-(getValidAmount() continuously loops until the user enters a valid number, preventing crashes from invalid inputs like letters or symbols. 
+
+the method (displayTransactions) uses format specifiers (%) thus acting as placeholders for the actual data Formats
+ This method prints a clean, formatted table. It uses the (printf) method for aligned columns. thus printing out the data in a way its easy to read.
+
+the method (getValidAmount() has a while loop implemented that continuously loops until the user enters a valid number,
+while preventing crashes from invalid inputs like letters or symbols.
 (via TransactionManager) this class is responsible for Reading and writing to a transactions.csv file Ensuring all transactions persisted between runs.
-This project exists to implement Practical Java skills like OOP, lists, input handling, file management, and date/time APIs. My code has A real-world use for things like tracking and finances in a structured way. I think I did a great job with its Modular design and my placement of code; each function does one thing clearly and cleanly. I feel as though my project is a foundation for any financial management system thus making it important 
+
+This project exists to implement Practical Java skills like OOP which is a programming style that organizes code into objects,
+lists such as ArrayList implementations that store Transaction objects,
+input handling thus controlling how the program reacts to user input,
+
+file management that determines How my program creates, reads, writes, saves, and loads data from files on my computer.,
+ and , and date/time APIs that include tools like (classes and methods)
+
+ implementing try-catch, a block of code used for exception handling letting my program attempt something that might fail, and gracefully handle the error if it does.
+
+ match flags , matching booleans that tracks whenever a transaction meets all my filter criteria
+
 
 
 
